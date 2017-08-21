@@ -10,8 +10,8 @@ include ('src/ts3admin.class.php');
 
 $ts3_ip = '127.0.0.1';
 $ts3_query_port = 10011;
-$ts3_user = 'serveradmin';
-$ts3_pass = 'm54GVt16';
+$ts3_user = 'elo';
+$ts3_pass = 'fmMr792e';
 $ts3_port = 9987;
 
 $ts3 = new ts3admin($ts3_ip, $ts3_query_port);
@@ -24,10 +24,12 @@ if($connect['success']) {
 
     while(1) {
         $bot = $ts3->getElement('data', $ts3->whoAmI());
-        $permissions = array();
-        $permissions['permissionID'] = array('permissionValue', 'permskip');
-        $bot->clientAddPerm($bot['client_id'], $permissions);
-        $msg = $ts3->readChatMessage('textprivate');
-        $bot->sendMessage(1, $msg['invokerid'], $msg['msg']);
+        $msg = $ts3->readChatMessage('textprivate', false);
+        $command = $ts3->getElement('data', $msg);
+
+        if($command['msg'] == "!autor"){
+            $ts3->sendMessage(1, $command['invokerid'], '531devv');
+        }
+
     }
 }
