@@ -20,15 +20,21 @@ if($connect['success']) {
     $ts3->login($ts3_user, $ts3_pass);
     $ts3->selectServer($ts3_port);
     $ts3->setName('EasyBot');
-    $ts3->sendMessage(3, 1, "Zaczynam prace!");
+    $ts3->logAdd(1, 'Starting EasyBot..');
 
     while(1) {
         $bot = $ts3->getElement('data', $ts3->whoAmI());
         $msg = $ts3->readChatMessage('textprivate', false);
         $command = $ts3->getElement('data', $msg);
 
-        if($command['msg'] == "!autor"){
-            $ts3->sendMessage(1, $command['invokerid'], '531devv');
+        if(strpos($command['msg'], '!help')) {
+            $ts3->sendMessage(1, $command['invokerid'], "XXX");
+        }
+        else if(strpos($command['msg'], '!autor')){
+            $ts3->sendMessage(1, $command['invokerid'], "Autorem bota jest: 531devv");
+        }
+        else if(strpos($command['msg'], '!msgall')) {
+            $ts3->gm(str_replace('!msgall', '', $command['msg']));
         }
 
     }
