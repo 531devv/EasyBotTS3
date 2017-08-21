@@ -1,3 +1,3 @@
 # EasyBotTS3
-# EasyBotTS3
-# EasyBotTS3
+
+Simple teamspeak3 bot.
