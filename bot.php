@@ -7,35 +7,35 @@
  */
 
 include ('src/ts3admin.class.php');
+$config = include ('config.php');
 
-$ts3_ip = '127.0.0.1';
-$ts3_query_port = 10011;
-$ts3_user = 'elo';
-$ts3_pass = 'fmMr792e';
-$ts3_port = 9987;
-
-$ts3 = new ts3admin($ts3_ip, $ts3_query_port);
+$ts3 = new ts3admin($config['ts3']['ip'], $config['ts3']['query_port']);
 $connect = $ts3->connect();
 if($connect['success']) {
-    $ts3->login($ts3_user, $ts3_pass);
-    $ts3->selectServer($ts3_port);
+    $ts3->login($config['ts3']['user'], $config['ts3']['password']);
+    $ts3->selectServer($config['ts3']['port']);
     $ts3->setName('EasyBot');
     $ts3->logAdd(1, 'Starting EasyBot..');
 
     while(1) {
         $bot = $ts3->getElement('data', $ts3->whoAmI());
         $msg = $ts3->readChatMessage('textprivate', false);
-        $command = $ts3->getElement('data', $msg);
+        $userMessage = $ts3->getElement('data', $msg);
 
-        if(strpos($command['msg'], '!help')) {
-            $ts3->sendMessage(1, $command['invokerid'], "XXX");
-        }
-        else if(strpos($command['msg'], '!autor')){
-            $ts3->sendMessage(1, $command['invokerid'], "Autorem bota jest: 531devv");
-        }
-        else if(strpos($command['msg'], '!msgall')) {
-            $ts3->gm(str_replace('!msgall', '', $command['msg']));
+        $args = explode(" ", $userMessage['msg']);
+
+        if($args[0] === "!help") {
+            $ts3->sendMessage(1, $userMessage['invokerid'], "\nCommands:\n !help\n !msg_all (text)\n !author\n");
+        } else if($args[0] === "!msg_all") {
+            $text = str_replace("!msg_all", "", $userMessage['msg']);
+            $clients = $ts3->getElement('data', $ts3->clientList());
+            foreach($clients as $client) {
+                $ts3->sendMessage(1, $client['clid'], $text);
+            }
+        } else if($args[0] === "!author") {
+            $ts3->sendMessage(1, $userMessage['invokerid'], "Created by 531devv, 531devv@gmail.com");
         }
 
     }
+
 }
